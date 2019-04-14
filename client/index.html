@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="google-signin-client_id"
+        content="358264422510-bb2230m4o0ilama88ljkc48ivnjm67hq.apps.googleusercontent.com">
+    <title>Document</title>
+    <link href="./assets/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" 
+                            integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" 
+                            crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/vueWysiwyg.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@1.11.2/dist/style.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!-- Vue, Axios, Swal/ Sweet Alert, Tag-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@1.8.0/dist/voerro-vue-tagsinput.js"></script>
+    
+
+</head>
+<body>
+    <div id="app">
+        <navbar-section v-bind:is-login="isLogin" 
+            v-on:signout-request="signOut"
+            v-on:showallarticle-request="showAllArticle"
+            v-on:showmyarticle-request="showMyArticle"
+            v-on:showloginform-request="changePage"
+            v-on:showregisterform-request="changePage" 
+            v-on:invitelogin-request="inviteToLogin"
+            v-on:showcreatearticlepage-request="changePage"
+            v-on:searchtag-request="searchMyArticle" ></navbar-section>
+        
+        
+        <!-- All Content when Login is Valid -->
+        <div class="col-12" v-if="isLogin">
+            <div class="row">
+                    <img src="./assets/home-background7.jpg" style="min-width:100%; height: 100%; position:fixed">
+            </div>
+            
+            <h4 v-if="currentPage=='mainPage'">Search Query: </h4>
+            <div class="container mt-12 d-flex" v-if="currentPage=='mainPage'" style="margin-top: 50px">
+                <article-list 
+                    v-bind:article-list="articleList"
+                    v-on:articledetail-request1="showOneArticle"
+                    v-on:articleedit-request1="showOneArticleForEdit"
+                    v-on:showmyarticle-request="showMyArticle" ></article-list>
+            </div>
+
+            <div class="row-12"  v-if="currentPage=='createArticle'" style="position: fixed; text-align: center; width: 100%; padding-top: 70px;">
+                <article-create v-on:submit-newarticle="createArticle"></article-create>
+            </div>
+            <div class="row-12"  v-if="currentPage=='detailArticlePage'" style="position: fixed; text-align: center; width: 100%; padding-top: 70px;">
+                <article-card 
+                    v-bind:article="articleData"
+                    v-on:showmyarticle-request="showMyArticle"
+                    v-on:articleedit-request="showOneArticleForEdit"></article-card>
+            </div>
+            <div class="row-12"  v-if="currentPage=='editArticlePage'" style="position: fixed; text-align: center; width: 100%; padding-top: 70px;">
+                    <article-edit 
+                        v-bind:article-data="articleData"
+                        v-on:showmyarticle-request="showMyArticle"
+                        ></article-edit>
+            </div>
+        </div>
+        
+        <!-- All Content when USER NOT LOGIN -->
+        <div class="col-12" v-show="!isLogin">
+            <div class="row">
+                <img src="./assets/home-background4.jpg" style="min-width:100%; height: 100%; position:fixed">
+            </div>
+
+            <div class="container" v-if="currentPage=='mainPage'" style="padding-top: 100px;">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <div class="card bg-transparent">
+                            <div class="card-body" >                       
+                                <allarticle-list v-bind:allarticle-list="allarticleList"></allarticle-list>
+                                
+                                <a href="/" class="btn btn-primary float-right">More <i class="fas fa-chevron-right"></i></a>
+                                
+                            </div>
+                        </div>                                            
+                    </div><!--/col-12-->
+                </div>
+
+            </div>
+
+            <div class="row-12" v-show="currentPage=='loginPage'" style="position: fixed; text-align: center; width: 100%; padding-top: 100px;">
+                <div class="col-md-6 mx-auto pt-20">
+                  <form v-on:submit.prevent="loginUser">
+                    <div class="form-group">
+                      <label for="emailInput" style="color:white; font-size:24px;">Email address</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="emailInput"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter email"
+                        v-model="loginEmail"
+                      />
+                    </div>
+  
+                    <div class="form-group">
+                      <label for="passwordInput" style="color:white; font-size:24px;">Password</label>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="passwordInput"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter password"
+                        v-model="loginPassword"
+                      />
+                    </div>
+  
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                  </form>
+
+                    <center>
+                        <div class="g-signin2" data-onsuccess="onSignIn" id="google_signin"></div>
+                        <br>
+                        <p style="color:white; font-size:20px; background: rgba(105,105,105, 0.8)">Dont have an account? <a href="#" id="sign_in" @click.prevent="changePage('registerPage')" style="color:white; font-size:24px;">Register Now</a></p>
+                    </center>
+
+                </div>
+            </div>
+            <div class="row-12"  v-if="currentPage=='registerPage'" style="position: fixed; text-align: center; width: 100%; padding-top: 100px;">
+                <div class="col-md-6 mx-auto pt-20">
+                    <form id="register_form" v-on:submit.prevent="registerUser" >
+                        <div class="form-group">
+                            <label for="nameReg" style="color:white; font-size:24px;">Name</label>
+                            <input type="text" class="form-control" 
+                                placeholder="Enter name here!" name="name" id="nameReg" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailReg" style="color:white; font-size:24px;">Email address</label>
+                            <input type="email" class="form-control" aria-describedby="emailHelp"
+                                placeholder="Enter email here!" name="email" id="emailReg" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordReg" style="color:white; font-size:24px;">Password</label>
+                            <input type="password" class="form-control" placeholder="Enter password here!" name="psw" id="pwReg"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="register_button">Submit</button>
+                        <div class="container signin">
+                            <br>
+                            <p style="color:white; font-size:20px; background: rgba(105,105,105, 0.8)">Already have an account? <a href="#" id="sign_in" @click.prevent="changePage('loginPage')" style="color:white; font-size:24px;">Sign in</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    
+    <script src="./js/vueWysiwyg.js"></script>
+    <script src="./js/components/article-list.js"></script>
+    <script src="./js/components/article-card.js"></script>
+    <script src="./js/components/article-edit.js"></script>
+    <script src="./js/components/allarticle-list.js"></script>
+    <script src="./js/components/allarticle-card.js"></script>
+    <script src="./js/components/article-create.js"></script>
+    <script src="./js/components/navbar.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</body>
+</html>
