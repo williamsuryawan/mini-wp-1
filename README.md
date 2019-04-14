@@ -1,6 +1,6 @@
 # mini-wp by William Suryawan
 
-#General
+#Local Access
 #### client site: http://localhost:8080/
 #### server site: http://localhost:3000/
 
@@ -11,17 +11,17 @@ $ npm run dev or nodemon app.js (on terminal inside root server folder)
 $ live-server --host=localhost (on terminal inside root client folder)
 ```
 
-#Deploy
+#Deploy (BETA Version, some bugs still exist)
 ```sh
-Server: 
-Client: 
+Server: http://35.247.170.82/
+Client: http://miniwordpress.williamsuryawan.com/
 ```
 
 ### **User Routing**
 HTTP METHOD | ROUTE | REQUEST | RESPONSE Success | RESPONSE Error | Description
 ------|------|-----------|------|----------|------------
-POST | users/register | body Object <br> example {email: String, password: String} | Code: 201 <br> Body: {message: newUser} | Code: 500 <br> Body: {message: internal server error} |register new user to fancy todo
-POST | users/login | body Object <br> example {email: String, password: String, loginVia: String} | Code: 200 <br> Body: {token: token} | Code 400 <b> Body: {msg: wrong email/password} | login via website/ googleSignIn to get the token and to access fancy todo
+POST | users/register | body Object <br> example {name: String, email: String, password: String} | Code: 201 <br> Body: {message: newUser} | Code: 500 <br> Body: {message: internal server error} |register new user to mini wordpress
+POST | users/login | body Object <br> example {email: String, password: String, loginVia: String} | Code: 200 <br> Body: {token: token} | Code 400 <b> Body: {msg: wrong email/password} | login via website/ googleSignIn to get the token and to access mini wordpress
 
 ### **Article Routing**
 

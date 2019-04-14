@@ -145,16 +145,16 @@
                         <div class="form-group">
                             <label for="nameReg" style="color:white; font-size:24px;">Name</label>
                             <input type="text" class="form-control" 
-                                placeholder="Enter name here!" name="name" id="nameReg" required>
+                                placeholder="Enter name here!" name="name" id="nameReg" v-model="regName" required>
                         </div>
                         <div class="form-group">
                             <label for="emailReg" style="color:white; font-size:24px;">Email address</label>
                             <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="Enter email here!" name="email" id="emailReg" required>
+                                placeholder="Enter email here!" name="email" id="emailReg" v-model="regEmail" required>
                         </div>
                         <div class="form-group">
                             <label for="passwordReg" style="color:white; font-size:24px;">Password</label>
-                            <input type="password" class="form-control" placeholder="Enter password here!" name="psw" id="pwReg"
+                            <input type="password" class="form-control" placeholder="Enter password here!" name="psw" id="pwReg" v-model="regPassword"
                                 required>
                         </div>
                         <button type="submit" class="btn btn-primary" id="register_button">Submit</button>

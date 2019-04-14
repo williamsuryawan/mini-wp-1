@@ -1,4 +1,4 @@
-const baseURL = `http://localhost:3000`
+const baseURL = `http://35.247.170.82`
 
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
@@ -104,14 +104,15 @@ let app = new Vue ({
         },
         showMyArticle() {
             console.log("masuk ke method show my article")
+            this.articleList = []
             axios
                 .get(`${baseURL}/articles/myarticle`, { headers: { token: localStorage.getItem('token') } })
                 .then(response => {
                     console.log("berhasil get my articles", response)
-                    this.articleList = []
                     response.data.data.forEach(myarticle => {
                         this.articleList.push(myarticle)
                     })
+                    console.log("hasil looping get my article", this.articleList)
                     this.currentPage='mainPage'
                 })
                 .catch(error => {
