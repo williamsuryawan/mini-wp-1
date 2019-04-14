@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-// const Model = require('../models')
+const Article = require('../models/article')
 
 module.exports = {
     authentication: function (req,res, next) {
@@ -28,14 +28,22 @@ module.exports = {
             })
         }
     },
-    // authorization: function(req, res, next) {
-    //     console.log("Input Authorization", req.loggedInUser)
-    //     if(req.loggedInUser.role == 'owner') {
-    //         next()
-    //     } else {
-    //         res.status(401).json({
-    //             message: "You dont have any authorization"
-    //         })
-    //     }
-    // }
+    authorization: function(req, res, next) {
+        console.log("Input Authorization to edit/delete article", req.loggedInUser, req.params.id)
+        Article.findOne({
+            _id: req.params.id
+        })
+        .populate("author")
+        .then(foundArticle => {
+            console.log("article ditemukan dalam authorization", foundArticle)
+            if(req.loggedInUser.id.toString() == foundArticle.author._id.toString()) {
+                next()
+            } else {
+                res.status(401).json({
+                    message: "You dont have any authorization"
+                })
+            }
+        })
+        
+    }
 }

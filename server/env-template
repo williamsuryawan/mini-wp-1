@@ -1,0 +1,8 @@
+name= "mongodb atlas access"
+password= "mongodb atlas access"
+JWT_SECRET= "for jwt token secret key "
+GOOGLE_DEFAULT_PASSWORD=  "for google sign in if the email has not been registered"
+CLIENT_ID= "for google sign in OAth2"
+GCLOUD_PROJECT=" for upload image using multer and google cloud "
+KEYFILE_PATH=" for upload image using multer and google cloud "
+CLOUD_BUCKET=" for upload image using multer and google cloud "
